@@ -17,7 +17,6 @@ import {
 import { logger, Postgres } from "../services";
 import { Crypto } from "./crypto";
 import {
-    checkColumnExists,
     getCurrentVotersSince,
     getDelegateTransactions,
     getForgedBlocks,
@@ -48,24 +47,14 @@ export class DatabaseAPI {
     ): Promise<ForgedBlock[]> {
         await this.psql.connect();
 
-        const checkColumnExistsQuery: string = checkColumnExists(
-            "blocks",
-            "burned_fee"
-        );
-
-        let result: Result = await this.psql.query(checkColumnExistsQuery);
-
-        const subtractBurnedFees = result.rows.length === 1;
-
         const getForgedBlocksQuery: string = getForgedBlocks(
             delegatePublicKey,
             startBlockHeight,
             endBlockHeight,
-            historyAmountBlocks,
-            subtractBurnedFees
+            historyAmountBlocks
         );
 
-        result = await this.psql.query(getForgedBlocksQuery);
+        const result: Result = await this.psql.query(getForgedBlocksQuery);
 
         await this.psql.close();
 
@@ -144,13 +133,11 @@ export class DatabaseAPI {
 
     public async getCurrentVotersSince(
         delegatePublicKey: string,
-        delegateName: string,
         networkVersion: number,
         timestamp: BigNumber
     ): Promise<Map<string, BigNumber>> {
         const getCurrentVotersQuery: string = getCurrentVotersSince(
-            delegatePublicKey,
-            delegateName
+            delegatePublicKey
         );
 
         await this.psql.connect();
@@ -194,14 +181,12 @@ export class DatabaseAPI {
      */
     public async getVoterMutations(
         delegatePublicKey: string,
-        delegateName: string,
         startBlockHeight: number,
         networkVersion: number
     ): Promise<VoterMutation[]> {
         const getVoterSinceHeightQuery: string = getVoterSinceHeight(
             startBlockHeight,
-            delegatePublicKey,
-            delegateName
+            delegatePublicKey
         );
         await this.psql.connect();
         const result: Result = await this.psql.query(getVoterSinceHeightQuery);
@@ -222,8 +207,7 @@ export class DatabaseAPI {
 
                     const vote: string = DatabaseAPI.selectVote(
                         transaction.asset.votes,
-                        delegatePublicKey,
-                        delegateName
+                        delegatePublicKey
                     );
                     return {
                         height: new BigNumber(
@@ -264,17 +248,13 @@ export class DatabaseAPI {
 
     private static selectVote(
         votes: string[],
-        delegatePublicKey: string,
-        delegateName: string,
+        delegatePublicKey: string
     ): string {
         if (votes.length === 2) {
             if (votes[0].substr(1) === votes[1].substr(1)) {
                 return "";
             }
             if (votes[1].substr(1) === delegatePublicKey) {
-                return votes[1];
-            }
-            if (votes[1].substr(1) === delegateName) {
                 return votes[1];
             }
         }
