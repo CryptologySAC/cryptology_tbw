@@ -1,16 +1,5 @@
 /**
  *
- * @param tableName
- * @param columnName
- */
-export const checkColumnExists = (
-    tableName: string,
-    columnName: string
-): string =>
-    `SELECT 1 FROM information_schema.columns WHERE table_name = '${tableName}' and column_name = '${columnName}';`;
-
-/**
- *
  * @param publicKey
  * @param startBlockHeight
  * @param endBlockHeight
@@ -20,15 +9,9 @@ export const getForgedBlocks = (
     publicKey: string,
     startBlockHeight: number,
     endBlockHeight: number,
-    limit: number,
-    subtractBurnedFees: boolean
+    limit: number
 ): string => {
-    let query = `SELECT blocks.height, blocks.timestamp, blocks.reward, \
-                        ${
-                            subtractBurnedFees
-                                ? "(blocks.total_fee - blocks.burned_fee)"
-                                : "blocks.total_fee"
-                        } AS "totalFee" \
+    let query = `SELECT blocks.height, blocks.timestamp, blocks.reward, blocks.total_fee AS "totalFee" \
           FROM public.blocks \
           WHERE blocks."generator_public_key" = '${publicKey}' \
           AND blocks.height >= ${startBlockHeight}`;
@@ -64,16 +47,13 @@ export const getVotingDelegates = (
     return query;
 };
 
-export const getCurrentVotersSince = (
-    delegatePublicKey: string,
-    delegateName: string
-): string => {
+export const getCurrentVotersSince = (delegatePublicKey: string): string => {
     return `SELECT * FROM ( \
     SELECT DISTINCT ON (transactions."sender_public_key") transactions."sender_public_key" AS "senderPublicKey", \
     transactions."asset", transactions."timestamp" \
     FROM transactions \
     WHERE transactions."type" = 3 AND transactions."type_group" = 1 \
-    AND (transactions."asset"->>'votes' LIKE '%+${delegatePublicKey}%' OR transactions."asset"->>'votes' LIKE '%+${delegateName}%') \
+    AND transactions."asset" @> '{"votes": ["+${delegatePublicKey}"]}' \
     ORDER BY transactions."sender_public_key", transactions."timestamp" DESC ) t \
     ORDER BY t."timestamp" DESC;`;
 };
@@ -85,14 +65,16 @@ export const getCurrentVotersSince = (
  */
 export const getVoterSinceHeight = (
     startBlockHeight: number,
-    delegatePublicKey: string,
-    delegateName: string
+    delegatePublicKey: string
 ): string => {
     return `SELECT transactions."asset", transactions."sender_public_key" AS "senderPublicKey", \ 
           blocks."height" \
           FROM transactions INNER JOIN blocks ON blocks."id" = transactions."block_id"  
           WHERE transactions."type" = 3 AND transactions."type_group" = 1 \
-          AND (transactions."asset"->>'votes' LIKE '%${delegatePublicKey}%' OR transactions."asset"->>'votes' LIKE '%${delegateName}%') \
+          AND ( \
+              transactions."asset" @> '{"votes": ["+${delegatePublicKey}"]}' \
+              OR transactions."asset" @> '{"votes": ["-${delegatePublicKey}"]}' \
+            ) \
           AND blocks.height >= ${startBlockHeight} ORDER BY blocks."height" ASC;`;
 };
 
