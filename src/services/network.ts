@@ -257,6 +257,14 @@ export class Network {
         }
     }
 
+    public processVoteWeight(voter: Voter): BigNumber {
+        let weight: BigNumber = new BigNumber(1);
+        if (voter.hasOwnProperty("weight")) {
+            weight = new BigNumber(voter.weight);
+        }
+        return weight;
+    }
+
     public processStakes(voter: Voter, epochTimestamp: BigNumber): Stake[] {
         const stakes: Stake[] = [];
         if (voter.hasOwnProperty("stakes")) {
@@ -376,6 +384,7 @@ export class Network {
                                 ? new BigNumber(walletAPIResult.data.power)
                                 : new BigNumber(0),
                             isDelegate: walletAPIResult.data.isDelegate,
+                            weight: this.processVoteWeight(walletAPIResult.data),
                             processedStakes: this.processStakes(
                                 walletAPIResult.data,
                                 epochTimestamp
