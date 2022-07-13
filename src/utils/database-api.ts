@@ -221,7 +221,9 @@ export class DatabaseAPI {
                         networkVersion
                     );
 
-                    const vote: string = DatabaseAPI.selectVote(
+                    // If there is a multivote we treat it as an added vote
+                    const vote: string = transaction.asset.votes.hasOwnProperty(delegateName) ? `+${delegateName}` :
+                        DatabaseAPI.selectVote(
                         transaction.asset.votes,
                         delegatePublicKey,
                         delegateName
@@ -253,7 +255,7 @@ export class DatabaseAPI {
                         ? "un-voted"
                         : "un-voted and voted";
                     logger.info(
-                        `Vote: ${votingTransaction.address} ${voterAction} at blockHeight ${votingTransaction.height} with weight ${votingTransaction.weight.times(100)}%`
+                        `${votingTransaction.address} ${voterAction} at blockHeight ${votingTransaction.height} with weight ${votingTransaction.weight.times(100)}%`
                     );
                 }
             }
