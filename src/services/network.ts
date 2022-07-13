@@ -397,7 +397,7 @@ export class Network {
                         };
                         allVotersFromAPI.push(voter);
                         voterCache.push(address);
-                        logger.warn(`Voter mutated: ${JSON.stringify(voter)}`);
+                        logger.info(`Mutation: ${address} is currently NOT a voter.`);
                     }
                 }
             }
