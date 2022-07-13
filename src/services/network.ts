@@ -387,7 +387,8 @@ export class Network {
                                 ? new BigNumber(walletAPIResult.data.power)
                                 : new BigNumber(0),
                             isDelegate: walletAPIResult.data.attributes.hasOwnProperty("delegate"),
-                            weight: walletAPIResult.data.hasOwnProperty("votingFor") ?
+                            weight: walletAPIResult.data.hasOwnProperty("votingFor") &&
+                                walletAPIResult.data.votingFor.hasOwnProperty(delegateName) ?
                                 new BigNumber(walletAPIResult.data.votingFor[delegateName].percent).div(100) :
                                 new BigNumber(1),
                             processedStakes: this.processStakes(
