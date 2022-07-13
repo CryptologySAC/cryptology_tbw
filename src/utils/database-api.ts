@@ -286,7 +286,7 @@ export class DatabaseAPI {
                 return votes[1];
             }
         }
-        logger.warn(`votes[0]: ${votes}`)
+        logger.warn(`votes: ${JSON.stringify(votes)}`)
 
         return votes[0];
     }
