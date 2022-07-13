@@ -60,6 +60,7 @@ export interface Voter {
     balance: BigNumber;
     power: BigNumber;
     weight?: BigNumber;
+    votingFor?: any,
     stakes?: any;
     processedStakes?: Stake[];
     isDelegate?: boolean;

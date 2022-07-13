@@ -249,7 +249,7 @@ export class Network {
             );
 
             if (voters.length === 0) {
-                logger.warn(`There are no current voters for ${delegate!}`);
+                logger.warn(`There are no current voters for ${delegate}!`);
             }
             return voters;
         } catch (e) {
@@ -257,10 +257,11 @@ export class Network {
         }
     }
 
-    public processVoteWeight(voter: Voter): BigNumber {
+    public processVoteWeight(voter: Voter, delegateName: string): BigNumber {
         let weight: BigNumber = new BigNumber(1);
-        if (voter.hasOwnProperty("weight")) {
-            weight = new BigNumber(voter.weight);
+        if (voter.hasOwnProperty("votingFor") && voter.votingFor.hasOwnProperty(delegateName) && voter.votingFor[delegateName].hasOwnProperty("percent")) {
+            weight = new BigNumber(voter.votingFor[delegateName].percent).div(100);
+            logger.info(`Voter ${voter.address} with ${weight.times(100)}% of his wallet.`);
         }
         return weight;
     }
@@ -349,6 +350,7 @@ export class Network {
         voterMutations: VoterMutation[],
         currentVotersFromAPI: Voter[],
         currentVoters: string[],
+        delegateName,
         epochTimestamp: BigNumber
     ): Promise<Voter[]> {
         const allVotersFromAPI: Voter[] = currentVotersFromAPI.slice(0);
@@ -384,7 +386,7 @@ export class Network {
                                 ? new BigNumber(walletAPIResult.data.power)
                                 : new BigNumber(0),
                             isDelegate: walletAPIResult.data.isDelegate,
-                            weight: this.processVoteWeight(walletAPIResult.data),
+                            weight: this.processVoteWeight(walletAPIResult.data, delegateName),
                             processedStakes: this.processStakes(
                                 walletAPIResult.data,
                                 epochTimestamp

@@ -226,6 +226,7 @@ export class TrueBlockWeightEngine {
     /**
      *
      * @param delegatePublicKey
+     * @param delegateName
      * @param forgedBlocks
      */
     public async getVoters(
@@ -263,6 +264,7 @@ export class TrueBlockWeightEngine {
             voterMutations,
             currentVotersFromAPI,
             currentVoters,
+            delegateName,
             this.epochTimestamp
         );
 
