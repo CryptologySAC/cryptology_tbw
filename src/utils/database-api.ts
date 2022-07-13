@@ -184,13 +184,11 @@ export class DatabaseAPI {
      * Get all the votes/un-votes for this delegate that are within range.
      * @param delegatePublicKey
      * @param delegateName
-     * @param startBlockHeight
      * @param networkVersion
      */
     public async getVoterMutations(
         delegatePublicKey: string,
         delegateName: string,
-        startBlockHeight: number,
         networkVersion: number
     ): Promise<VoterMutation[]> {
         const getVoterSinceHeightQuery: string = getVoterSinceHeight(
