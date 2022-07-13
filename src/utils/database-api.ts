@@ -209,7 +209,7 @@ export class DatabaseAPI {
 
         for (const vote in result.rows) {
             if (vote) {
-                logger.warn(`VOTE RAW: ${result.rows[vote]}`);
+                logger.warn(`VOTE RAW: ${JSON.stringify(result.rows[vote])}`);
             }
         }
 
