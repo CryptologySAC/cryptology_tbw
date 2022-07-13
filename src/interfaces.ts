@@ -94,6 +94,7 @@ export interface VoterMutation {
     height: number;
     address: string;
     vote: string;
+    weight: BigNumber;
 }
 
 export interface VoterBlock {

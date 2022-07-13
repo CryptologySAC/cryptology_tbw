@@ -227,12 +227,17 @@ export class DatabaseAPI {
                         delegateName
                     );
 
+                    const weight: BigNumber = transaction.asset.votes.hasOwnProperty(delegateName) ?
+                        new BigNumber(transaction.asset.votes[delegateName]).div(100) :
+                        new BigNumber(1);
+
                     return {
                         height: new BigNumber(
                             transaction.height
                         ).integerValue(),
                         address,
                         vote,
+                        weight,
                     };
                 }
             );
@@ -248,7 +253,7 @@ export class DatabaseAPI {
                         ? "un-voted"
                         : "un-voted and voted";
                     logger.info(
-                        `Vote: ${votingTransaction.address} ${voterAction} at blockHeight ${votingTransaction.height}`
+                        `Vote: ${votingTransaction.address} ${voterAction} at blockHeight ${votingTransaction.height} with weight ${votingTransaction.weight.times(100)}%`
                     );
                 }
             }

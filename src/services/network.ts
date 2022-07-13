@@ -20,12 +20,12 @@ export class Network {
     public async getNetworkConfig(): Promise<Interfaces.NetworkConfig> {
         try {
             const config: APIResults = await this.getFromAPI(
-                "/api/node/configuration/crypto"
+                "/api/node/configuration/crypto",
             );
             return config.data;
         } catch (e) {
             throw new Error(
-                "Can't load network config. Please check your node(s) configuration."
+                "Can't load network config. Please check your node(s) configuration.",
             );
         }
     }
@@ -39,7 +39,7 @@ export class Network {
             return config.data.block.height;
         } catch (e) {
             throw new Error(
-                "Can't load current network block-height. Please check your node(s) configuration."
+                "Can't load current network block-height. Please check your node(s) configuration.",
             );
         }
     }
@@ -51,12 +51,12 @@ export class Network {
     public async getNonceForDelegate(delegate: string): Promise<number> {
         try {
             const delegateWallet: string = await this.getDelegateAddress(
-                delegate
+                delegate,
             );
             return this.getNonceForWallet(delegateWallet);
         } catch (e) {
             throw new Error(
-                `Can't load nonce for ${delegate}. Please check your node(s) configuration.`
+                `Can't load nonce for ${delegate}. Please check your node(s) configuration.`,
             );
         }
     }
@@ -64,15 +64,15 @@ export class Network {
     public async getNonceForWallet(wallet: string): Promise<number> {
         try {
             const walletInfo: APIResults = await this.getFromAPI(
-                `/api/wallets/${wallet}`
+                `/api/wallets/${wallet}`,
             );
             return walletInfo.hasOwnProperty("data") &&
-                walletInfo.data.hasOwnProperty("nonce")
+            walletInfo.data.hasOwnProperty("nonce")
                 ? parseInt(walletInfo.data.nonce, 10)
                 : Number.NaN;
         } catch (e) {
             throw new Error(
-                `Can't load nonce for ${wallet}. Please check your node(s) configuration.`
+                `Can't load nonce for ${wallet}. Please check your node(s) configuration.`,
             );
         }
     }
@@ -84,7 +84,7 @@ export class Network {
      */
     public async getFromAPI(
         endPoint: string,
-        params = {}
+        params = {},
     ): Promise<APIResults> {
         for (const APINode of this.nodes) {
             const node: string =
@@ -119,7 +119,7 @@ export class Network {
         const publicKey: string = Crypto.getPublicKeyFromSeed(seed);
         const getWalletByPubKLeyEndpoint: string = `/api/wallets?publicKey=${publicKey}`;
         const delegateNameAPIResults: APIResults = await this.getFromAPI(
-            getWalletByPubKLeyEndpoint
+            getWalletByPubKLeyEndpoint,
         );
 
         if (
@@ -139,7 +139,7 @@ export class Network {
         const publicKey: string = Crypto.getPublicKeyFromSeed(seed);
         const getWalletByPubKLeyEndpoint: string = `/api/wallets?publicKey=${publicKey}`;
         const delegateNameAPIResults: APIResults = await this.getFromAPI(
-            getWalletByPubKLeyEndpoint
+            getWalletByPubKLeyEndpoint,
         );
 
         if (
@@ -166,7 +166,7 @@ export class Network {
         }
 
         throw new Error(
-            "Could not retrieve delegate data: does the configured seed belong to a delegate wallet?"
+            "Could not retrieve delegate data: does the configured seed belong to a delegate wallet?",
         );
     }
 
@@ -176,7 +176,7 @@ export class Network {
     public async getDelegatePublicKey(delegate: string): Promise<string> {
         const getDelegateEndpoint: string = `/api/delegates/${delegate}/`;
         const delegateAPIResults: APIResults = await this.getFromAPI(
-            getDelegateEndpoint
+            getDelegateEndpoint,
         );
 
         if (
@@ -189,14 +189,14 @@ export class Network {
         }
 
         throw new Error(
-            "Could not retrieve delegate data: is the configured delegate registered?"
+            "Could not retrieve delegate data: is the configured delegate registered?",
         );
     }
 
     public async getDelegateAddress(delegate: string): Promise<string> {
         const getDelegateEndpoint: string = `/api/delegates/${delegate}/`;
         const delegateAPIResults: APIResults = await this.getFromAPI(
-            getDelegateEndpoint
+            getDelegateEndpoint,
         );
 
         if (
@@ -227,7 +227,7 @@ export class Network {
             do {
                 votersAPIResults = await this.getFromAPI(
                     getVotersEndpoint,
-                    params
+                    params,
                 );
                 if (
                     votersAPIResults.hasOwnProperty("data") &&
@@ -247,7 +247,7 @@ export class Network {
 
             // process voter weight
             for (const voter in voters) {
-                if(voter) {
+                if (voter) {
                     voters[voter].weight = this.processVoteWeight(voters[voter], delegate);
                 }
             }
@@ -290,49 +290,49 @@ export class Network {
                         timestamps: {
                             created:
                                 voterStakes[item].hasOwnProperty(
-                                    "timestamps"
+                                    "timestamps",
                                 ) &&
                                 voterStakes[item].timestamps.hasOwnProperty(
-                                    "created"
+                                    "created",
                                 )
                                     ? new BigNumber(
-                                          voterStakes[item].timestamps.created
-                                      ).minus(epochTimestamp)
+                                        voterStakes[item].timestamps.created,
+                                    ).minus(epochTimestamp)
                                     : new BigNumber(0),
                             graceEnd:
                                 voterStakes[item].hasOwnProperty(
-                                    "timestamps"
+                                    "timestamps",
                                 ) &&
                                 voterStakes[item].timestamps.hasOwnProperty(
-                                    "graceEnd"
+                                    "graceEnd",
                                 )
                                     ? new BigNumber(
-                                          voterStakes[item].timestamps.graceEnd
-                                      ).minus(epochTimestamp)
+                                        voterStakes[item].timestamps.graceEnd,
+                                    ).minus(epochTimestamp)
                                     : new BigNumber(0),
                             powerUp:
                                 voterStakes[item].hasOwnProperty(
-                                    "timestamps"
+                                    "timestamps",
                                 ) &&
                                 voterStakes[item].timestamps.hasOwnProperty(
-                                    "powerUp"
+                                    "powerUp",
                                 )
                                     ? new BigNumber(
-                                          voterStakes[item].timestamps.powerUp
-                                      ).minus(epochTimestamp)
+                                        voterStakes[item].timestamps.powerUp,
+                                    ).minus(epochTimestamp)
                                     : new BigNumber(0),
                             redeemable:
                                 voterStakes[item].hasOwnProperty(
-                                    "timestamps"
+                                    "timestamps",
                                 ) &&
                                 voterStakes[item].timestamps.hasOwnProperty(
-                                    "redeemable"
+                                    "redeemable",
                                 )
                                     ? new BigNumber(
-                                          voterStakes[
-                                              item
-                                          ].timestamps.redeemable
-                                      ).minus(epochTimestamp)
+                                        voterStakes[
+                                            item
+                                            ].timestamps.redeemable,
+                                    ).minus(epochTimestamp)
                                     : new BigNumber(0),
                         },
                     };
@@ -351,7 +351,7 @@ export class Network {
         currentVotersFromAPI: Voter[],
         currentVoters: string[],
         delegateName,
-        epochTimestamp: BigNumber
+        epochTimestamp: BigNumber,
     ): Promise<Voter[]> {
         const allVotersFromAPI: Voter[] = currentVotersFromAPI.slice(0);
         const voterCache: string[] = [];
@@ -366,7 +366,7 @@ export class Network {
                 if (voterCache.indexOf(address) < 0) {
                     const getWalletEndpoint: string = `/api/wallets/${address}/`;
                     const walletAPIResult: APIResults = await this.getFromAPI(
-                        getWalletEndpoint
+                        getWalletEndpoint,
                     );
                     if (
                         walletAPIResult &&
@@ -374,26 +374,29 @@ export class Network {
                         walletAPIResult.data.hasOwnProperty("address") &&
                         walletAPIResult.data.hasOwnProperty("publicKey") &&
                         walletAPIResult.data.hasOwnProperty("balance") &&
-                        walletAPIResult.data.hasOwnProperty("isDelegate")
+                        walletAPIResult.data.hasOwnProperty("attributes")
                     ) {
                         const voter: Voter = {
                             address: walletAPIResult.data.address,
                             publicKey: walletAPIResult.data.publicKey,
                             balance: new BigNumber(
-                                walletAPIResult.data.balance
+                                walletAPIResult.data.balance,
                             ),
                             power: walletAPIResult.data.hasOwnProperty("power")
                                 ? new BigNumber(walletAPIResult.data.power)
                                 : new BigNumber(0),
-                            isDelegate: walletAPIResult.data.isDelegate,
-                            weight: this.processVoteWeight(walletAPIResult.data, delegateName),
+                            isDelegate: walletAPIResult.data.attributes.hasOwnProperty("delegate"),
+                            weight: walletAPIResult.data.hasOwnProperty("votingFor") ?
+                                new BigNumber(walletAPIResult.data.votingFor[delegateName].percent).idiv(100) :
+                                new BigNumber(1),
                             processedStakes: this.processStakes(
                                 walletAPIResult.data,
-                                epochTimestamp
+                                epochTimestamp,
                             ),
                         };
                         allVotersFromAPI.push(voter);
                         voterCache.push(address);
+                        logger.warn(`Voter mutated: ${JSON.stringify(voter)}`);
                     }
                 }
             }
@@ -406,7 +409,7 @@ export class Network {
      * @param transactions
      */
     public async broadcastTransactions(
-        transactions: Interfaces.ITransactionData[]
+        transactions: Interfaces.ITransactionData[],
     ): Promise<BroadcastResult[]> {
         const results: BroadcastResult[] = [];
         for (const item in this.nodes) {
@@ -417,7 +420,7 @@ export class Network {
             ) {
                 const node: string = `http://${this.nodes[item].host}:${this.nodes[item].port}`;
                 logger.info(
-                    `Sending ${transactions.length} transactions to ${node}.`
+                    `Sending ${transactions.length} transactions to ${node}.`,
                 );
                 const response = await axios.post(
                     `${node}/api/transactions`,
@@ -426,7 +429,7 @@ export class Network {
                     },
                     {
                         headers: { "Content-Type": "application/json" },
-                    }
+                    },
                 );
                 results.push({ node, response: response.data });
             }
