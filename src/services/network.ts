@@ -376,6 +376,7 @@ export class Network {
                         walletAPIResult.data.hasOwnProperty("balance") &&
                         walletAPIResult.data.hasOwnProperty("attributes")
                     ) {
+                        logger.warn(`DEBUG: ${JSON.stringify(walletAPIResult.data.votingFor)}`);
                         const voter: Voter = {
                             address: walletAPIResult.data.address,
                             publicKey: walletAPIResult.data.publicKey,
