@@ -220,7 +220,7 @@ export class DatabaseAPI {
                         delegatePublicKey,
                         delegateName
                     );
-                    logger.warn(`VOTE RAW: ${transaction.asset.vote}`);
+                    logger.warn(`VOTE RAW: ${transaction.asset.votes}`);
 
                     return {
                         height: new BigNumber(
