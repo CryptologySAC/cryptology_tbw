@@ -194,7 +194,8 @@ export class DatabaseAPI {
         networkVersion: number
     ): Promise<VoterMutation[]> {
         const getVoterSinceHeightQuery: string = getVoterSinceHeight(
-            startBlockHeight,
+            delegatePublicKey,
+            delegateName
         );
         await this.psql.connect();
         const result: Result = await this.psql.query(getVoterSinceHeightQuery);
