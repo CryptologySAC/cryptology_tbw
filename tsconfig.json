@@ -15,7 +15,8 @@
         "esModuleInterop": true,
         "forceConsistentCasingInFileNames": true,
         "noImplicitReturns": true,
-        "removeComments": true
+        "removeComments": true,
+        "noPropertyAccessFromIndexSignature": false
     },
     "exclude": ["node_modules", "**/*.spec.ts", "**/*.test.ts"],
     "include": ["src/**/**.ts"]
