@@ -96,8 +96,7 @@ export class Network {
             try {
                 const response = await axios.get(`${node}${endPoint}`, {
                     params,
-                    headers: { "API-Version": 2 },
-                    timeout: 50000,
+                    timeout: 5000,
                 });
 
                 if (
