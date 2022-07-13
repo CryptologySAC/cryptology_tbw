@@ -91,7 +91,7 @@ export const getVoterSinceHeight = (
               OR transactions."asset" @> '{"votes": ["-${delegatePublicKey}"]}' \
               OR transactions."asset"  @> '{"votes": ["+${delegateName}"]}' \
               OR transactions."asset"  @> '{"votes": ["-${delegateName}"]}' \
-              OR transactions."asset"  @> '"${delegateName}"' \
+              OR json_extract_path(transactions."asset", '${delegateName}') IS NOT NULL \
           ) \
           AND blocks.height >= ${startBlockHeight} ORDER BY blocks."height" ASC;`;
 };
