@@ -183,6 +183,7 @@ export class DatabaseAPI {
     /**
      * Get all the votes/un-votes for this delegate that are within range.
      * @param delegatePublicKey
+     * @param delegateName
      * @param startBlockHeight
      * @param networkVersion
      */
@@ -232,6 +233,7 @@ export class DatabaseAPI {
             logger.info(`${voterMutations.length} Voter mutations processed.`);
             for (const vote in voterMutations) {
                 if (voterMutations[vote]) {
+                    logger.warn(`VOTE RAW: ${voterMutations[vote]}`);
                     const votingTransaction: VoterMutation =
                         voterMutations[vote];
                     const voterAction = votingTransaction.vote.startsWith("+")
