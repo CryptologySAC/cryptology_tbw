@@ -72,6 +72,7 @@ export const getCurrentVotersSince = (
  *
  * @param startBlockHeight
  * @param delegatePublicKey
+ * @param delegateName
  */
 export const getVoterSinceHeight = (
     startBlockHeight: number,
@@ -81,13 +82,22 @@ export const getVoterSinceHeight = (
     return `SELECT transactions."asset", transactions."sender_public_key" AS "senderPublicKey", \
           blocks."height" \
           FROM transactions INNER JOIN blocks ON blocks."id" = transactions."block_id"
-          WHERE transactions."type" = 3 AND transactions."type_group" = 1 \
+          WHERE \
+          
+          (( \
+          transactions."type" = 3 AND transactions."type_group" = 1 \
           AND ( \
               transactions."asset" @> '{"votes": ["+${delegatePublicKey}"]}' \
               OR transactions."asset" @> '{"votes": ["-${delegatePublicKey}"]}' \
               OR transactions."asset"  @> '{"votes": ["+${delegateName}"]}' \
               OR transactions."asset"  @> '{"votes": ["-${delegateName}"]}' \
-            ) \
+            )) \ 
+          OR \
+          ( \
+          transactions."type" = 2 AND transactions."type_group" = 2 \
+          AND transactions."asset" @> '{votes: ["${delegateName}"]}'
+          )) \
+            
           AND blocks.height >= ${startBlockHeight} ORDER BY blocks."height" ASC;`;
 };
 
