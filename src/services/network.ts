@@ -93,7 +93,6 @@ export class Network {
                 APINode.hasOwnProperty("port")
                     ? `http://${APINode.host}:${APINode.port}`
                     : this.server;
-logger.warn(`NODE: ${node}`);
             try {
                 const response = await axios.get(`${node}${endPoint}`, {
                     params,
@@ -108,7 +107,7 @@ logger.warn(`NODE: ${node}`);
                     return response.data;
                 }
             } catch (error) {
-                logger.warn(`${error} for URL: ${node}${endPoint}`);
+                logger.error(`${error} for URL: ${node}${endPoint}`);
             }
         }
 
