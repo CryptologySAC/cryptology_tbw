@@ -94,7 +94,7 @@ export const getVoterSinceHeight = (
           OR \
           ( \
           transactions."type" = 2 AND transactions."type_group" = 2 \
-          AND transactions."asset" @> '{"votes": {"${delegateName}"}'
+          AND transactions."asset" @> '{"votes": {"${delegateName}"}}'
           )) \            
           AND blocks.height >= ${startBlockHeight} ORDER BY blocks."height" ASC;`;
 };
