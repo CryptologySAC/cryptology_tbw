@@ -271,7 +271,7 @@ export class DatabaseAPI {
         delegateName: string,
     ): string {
         if (votes.length === 2) {
-            if (typeof votes[0] === undefined || votes[0].substr(1) === votes[1].substr(1)) {
+            if (votes[0].substr(1) === votes[1].substr(1)) {
                 logger.warn(`votes[]: ${""}`)
                 return "";
             }
@@ -288,7 +288,7 @@ export class DatabaseAPI {
         }
         logger.warn(`votes: ${JSON.stringify(votes)}`)
 
-        return votes[0];
+        return ""; // votes[0];
     }
 
     /**
