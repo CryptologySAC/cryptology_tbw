@@ -1,14 +1,7 @@
 import { Interfaces } from "@solar-network/crypto";
 import axios from "axios";
 import BigNumber from "bignumber.js";
-import {
-    APIResults,
-    BroadcastResult,
-    Node,
-    Stake,
-    Voter,
-    VoterMutation,
-} from "../interfaces";
+import { APIResults, BroadcastResult, Node, Stake, Voter, VoterMutation } from "../interfaces";
 import { logger } from "./";
 import { Crypto } from "../utils";
 
@@ -246,10 +239,17 @@ export class Network {
             } while (
                 votersAPIResults.hasOwnProperty("data") &&
                 votersAPIResults.data.length > 0
-            );
+                );
 
             if (voters.length === 0) {
                 logger.warn(`There are no current voters for ${delegate}!`);
+            }
+
+            // process voter weight
+            for (const voter in voters) {
+                if(voter) {
+                    voters[voter].weight = this.processVoteWeight(voters[voter], delegate);
+                }
             }
             return voters;
         } catch (e) {
