@@ -286,6 +286,8 @@ export class DatabaseAPI {
                 return votes[1];
             }
         }
+        logger.warn(`votes[0]: ${votes[0]}`)
+
         return votes[0];
     }
 
