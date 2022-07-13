@@ -207,12 +207,6 @@ export class DatabaseAPI {
             return [];
         }
 
-        for (const vote in result.rows) {
-            if (vote) {
-                logger.warn(`VOTE RAW: ${JSON.stringify(result.rows[vote])}`);
-            }
-        }
-
         try {
             const voterMutations: VoterMutation[] = result.rows.map(
                 (transaction: VoteTransaction) => {
