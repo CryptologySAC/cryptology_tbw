@@ -195,8 +195,6 @@ export class DatabaseAPI {
     ): Promise<VoterMutation[]> {
         const getVoterSinceHeightQuery: string = getVoterSinceHeight(
             startBlockHeight,
-            delegatePublicKey,
-            delegateName
         );
         await this.psql.connect();
         const result: Result = await this.psql.query(getVoterSinceHeightQuery);
@@ -225,7 +223,7 @@ export class DatabaseAPI {
 
                     const weight: BigNumber = transaction.asset.votes.hasOwnProperty(delegateName) ?
                         new BigNumber(transaction.asset.votes[delegateName]).div(100) :
-                        new BigNumber(1);
+                        vote.startsWith("+") ? new BigNumber(1) : new BigNumber(0);
 
                     return {
                         height: new BigNumber(
