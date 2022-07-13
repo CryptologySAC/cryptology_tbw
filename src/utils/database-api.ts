@@ -205,6 +205,8 @@ export class DatabaseAPI {
             return [];
         }
 
+        logger.info(`${result.rows.length} mutations retrieved from DB.`)
+
         try {
             const voterMutations: VoterMutation[] = result.rows.map(
                 (transaction: VoteTransaction) => {
