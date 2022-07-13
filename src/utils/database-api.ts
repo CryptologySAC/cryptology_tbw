@@ -220,6 +220,8 @@ export class DatabaseAPI {
                         delegatePublicKey,
                         delegateName
                     );
+                    logger.warn(`VOTE RAW: ${transaction.asset.vote}`);
+
                     return {
                         height: new BigNumber(
                             transaction.height
@@ -233,7 +235,6 @@ export class DatabaseAPI {
             logger.info(`${voterMutations.length} Voter mutations processed.`);
             for (const vote in voterMutations) {
                 if (voterMutations[vote]) {
-                    logger.warn(`VOTE RAW: ${voterMutations[vote]}`);
                     const votingTransaction: VoterMutation =
                         voterMutations[vote];
                     const voterAction = votingTransaction.vote.startsWith("+")
