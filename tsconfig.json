@@ -7,7 +7,7 @@
         "module": "commonjs",
         "moduleResolution": "node",
         "sourceMap": true,
-        "strict": true,
+        "strict": false,
         "noUnusedLocals": true,
         "noUnusedParameters": true,
         "resolveJsonModule": true,
@@ -16,7 +16,8 @@
         "forceConsistentCasingInFileNames": true,
         "noImplicitReturns": true,
         "removeComments": true,
-        "noPropertyAccessFromIndexSignature": false
+        "noPropertyAccessFromIndexSignature": false,
+        "strictNullChecks": false
     },
     "exclude": ["node_modules", "**/*.spec.ts", "**/*.test.ts"],
     "include": ["src/**/**.ts"]
