@@ -258,7 +258,7 @@ export class DatabaseAPI {
                 );
             });
         } catch (e) {
-            logger.error("0 Voter mutations retrieved.");
+            logger.error(e);
             return [];
         }
     }
