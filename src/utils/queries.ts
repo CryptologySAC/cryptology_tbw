@@ -59,10 +59,14 @@ export const getCurrentVotersSince = (
     SELECT DISTINCT ON (transactions."sender_public_key") transactions."sender_public_key" AS "senderPublicKey", \
     transactions."asset", transactions."timestamp" \
     FROM transactions \
-    WHERE transactions."type" = 3 AND transactions."type_group" = 1 \
+    WHERE ( \
+        transactions."type" = 3 AND transactions."type_group" = 1 \
+        OR transactions."type" = 2 AND transactions."type_group" = 2 \
+    ) \
     AND ( \
-        transactions."asset" @> '{"votes": ["+${delegatePublicKey}"]}' \
-        OR transactions."asset" @> '{"votes": ["+${delegateName}"]}' \
+        transactions."asset"->'votes' @> '["+${delegatePublicKey}"]' \
+        OR transactions."asset"->'votes' @> '["+${delegateName}"]' \
+        OR transactions."asset"->'votes' ? '${delegateName}' \
     )\
     ORDER BY transactions."sender_public_key", transactions."timestamp" DESC ) t \
     ORDER BY t."timestamp" DESC;`;
