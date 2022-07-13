@@ -207,6 +207,12 @@ export class DatabaseAPI {
             return [];
         }
 
+        for (const vote in result.rows) {
+            if (vote) {
+                logger.warn(`VOTE RAW: ${result.rows[vote]}`);
+            }
+        }
+
         try {
             const voterMutations: VoterMutation[] = result.rows.map(
                 (transaction: VoteTransaction) => {
@@ -220,7 +226,6 @@ export class DatabaseAPI {
                         delegatePublicKey,
                         delegateName
                     );
-                    logger.warn(`VOTE RAW: ${transaction.asset.votes}`);
 
                     return {
                         height: new BigNumber(
