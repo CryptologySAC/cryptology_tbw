@@ -270,15 +270,21 @@ export class DatabaseAPI {
     ): string {
         if (votes.length === 2) {
             if (votes[0].substr(1) === votes[1].substr(1)) {
+                logger.warn(`votes[]: ${""}`)
                 return "";
             }
             if (votes[1].substr(1) === delegatePublicKey) {
+                logger.warn(`votes[1]: ${votes[1]}`)
+
                 return votes[1];
             }
             if (votes[1].substr(1) === delegateName) {
+                logger.warn(`votes[1]: ${votes[1]}`)
+
                 return votes[1];
             }
         }
+        logger.warn(`votes[0]: ${votes[0]}`)
 
         return votes[0];
     }
